@@ -24,9 +24,7 @@ npm start
 npm run dist:win
 ```
 
-Команда скачает ядро Xray для Windows в папку `core/` и соберёт:
-- `dist/DeskRoute-Setup-<версия>.exe` — установщик;
-- `dist/DeskRoute-Portable-<версия>.exe` — одна программа без установки.
+Команда скачает ядро Xray для Windows в папку `core/` и соберёт в `dist/` установщик, портативный exe и zip-архив.
 
 ## Linux
 
@@ -34,7 +32,7 @@ npm run dist:win
 npm run dist:linux
 ```
 
-На выходе получится `dist/DeskRoute-<версия>.AppImage`. Собирать нужно на Linux.
+На выходе в `dist/` появятся tar.gz (вместе с `install.sh`) и AppImage. Собирать нужно на Linux.
 
 ## macOS
 
@@ -62,3 +60,16 @@ XRAY_BIN=/путь/к/xray npm run test:e2e        # 14 протоколов ч�
 ## Демо интерфейса в браузере
 
 В `dev/mock.js` лежит имитация главного процесса. Скопируйте `src/renderer` в отдельную папку, положите `mock.js` в её подпапку `js/` и замените строку `<!-- demo-mock -->` в `index.html` на `<script src="js/mock.js"></script>`. Так интерфейс можно открыть в обычном браузере без Electron.
+
+## Выпуск релиза
+
+Релизы собирает GitHub Actions (`.github/workflows/release.yml`). Чтобы выпустить новую версию:
+1. поднимите `version` в `package.json`;
+2. положите описание в `docs/release-notes/v<версия>.md`;
+3. создайте и отправьте тег:
+   ```sh
+   git tag v1.2.0
+   git push origin v1.2.0
+   ```
+
+Сборка под Windows и Linux займёт минут десять, после чего на странице релизов появятся файлы и `SHA256SUMS.txt`.

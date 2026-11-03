@@ -48,18 +48,16 @@
 
 ## Быстрый старт
 
-**Windows 10/11 (x64)**
-1. Скачайте `DeskRoute-<версия>-windows-x64.zip` со страницы [релизов](../../releases/latest).
-2. Распакуйте в любую папку и запустите `DeskRoute.exe`. Установка не нужна, ядро Xray уже внутри.
-3. Если появится «Windows защитила ваш компьютер», нажмите «Подробнее» → «Выполнить в любом случае»: у сборки нет платной цифровой подписи.
+**Windows 10/11 (x64)**: скачайте со страницы [релизов](../../releases/latest) установщик `DeskRoute-Setup-<версия>.exe`, портативный `DeskRoute-Portable-<версия>.exe` или архив `DeskRoute-<версия>-windows-x64.zip`. Ядро Xray уже внутри.
+Если появится «Windows защитила ваш компьютер», нажмите «Подробнее» → «Выполнить в любом случае»: у сборки нет платной цифровой подписи.
 
 **Arch Linux и другие дистрибутивы (x86_64)**
 ```sh
 tar -xzf DeskRoute-<версия>-linux-x64.tar.gz
-cd DeskRoute
+cd deskroute-*/
 ./install.sh
 ```
-DeskRoute появится в меню приложений; из терминала он запускается командой `deskroute`.
+DeskRoute появится в меню приложений; из терминала он запускается командой `deskroute`. Есть и AppImage — один файл, для него в Arch нужен пакет `fuse2`.
 
 Потом нажмите «Добавить», вставьте ссылку на подписку и подключайтесь. Подробно — в [docs/INSTALL.md](docs/INSTALL.md).
 
@@ -69,9 +67,9 @@ DeskRoute появится в меню приложений; из термина
 npm install
 npm start          # запуск без сборки
 npm run dist:win   # установщик и портативная версия для Windows
-npm run dist:linux # AppImage для Linux
+npm run dist:linux # tar.gz и AppImage для Linux
 ```
-Нужен Node.js 22. Подробности — в [docs/BUILD.md](docs/BUILD.md).
+Нужен Node.js 22. Подробности — в [docs/BUILD.md](docs/BUILD.md). Релизы собирает GitHub Actions: достаточно запушить тег вида `v1.2.0` и положить описание в `docs/release-notes/v1.2.0.md`.
 
 ## Устройство
 

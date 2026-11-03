@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "DeskRoute — десктопный клиент для подписок Xray (VLESS, VMess, Trojan, Shadowsocks, Hysteria2) с настраиваемым оформлением",
   "main": "src/main/main.js",
-  "author": "DeskRoute",
+  "author": "linekerx",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -12,9 +12,9 @@
     "fetch-core": "node scripts/fetch-core.js",
     "test": "node --test test/links.test.js",
     "test:e2e": "node test/e2e.js",
-    "dist:win": "node scripts/fetch-core.js --platform=win32 --arch=x64 && electron-builder --win --x64",
-    "dist:mac": "node scripts/fetch-core.js --platform=darwin && electron-builder --mac",
-    "dist:linux": "node scripts/fetch-core.js --platform=linux --arch=x64 && electron-builder --linux --x64"
+    "dist:win": "node scripts/fetch-core.js --platform=win32 --arch=x64 && electron-builder --win --x64 --publish never",
+    "dist:mac": "node scripts/fetch-core.js --platform=darwin && electron-builder --mac --publish never",
+    "dist:linux": "node scripts/fetch-core.js --platform=linux --arch=x64 && electron-builder --linux --x64 --publish never"
   },
   "devDependencies": {
     "electron": "^45.2.1",
@@ -54,9 +54,11 @@
     "win": {
       "target": [
         "nsis",
-        "portable"
+        "portable",
+        "zip"
       ],
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.ico",
+      "artifactName": "DeskRoute-${version}-windows-x64.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -78,10 +80,34 @@
     },
     "linux": {
       "target": [
+        "tar.gz",
         "AppImage"
       ],
       "category": "Network",
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "executableName": "deskroute",
+      "artifactName": "DeskRoute-${version}-linux-x64.${ext}",
+      "extraFiles": [
+        {
+          "from": "build/linux",
+          "to": ".",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "assets/icon.png",
+          "to": "deskroute.png"
+        }
+      ]
+    },
+    "appImage": {
+      "artifactName": "DeskRoute-${version}-x86_64.${ext}"
     }
+  },
+  "homepage": "https://github.com/linekerx/deskroute",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linekerx/deskroute.git"
   }
 }
