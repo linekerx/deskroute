@@ -66,10 +66,8 @@ XRAY_BIN=/путь/к/xray npm run test:e2e        # 14 протоколов ч�
 Релизы собирает GitHub Actions (`.github/workflows/release.yml`). Чтобы выпустить новую версию:
 1. поднимите `version` в `package.json`;
 2. положите описание в `docs/release-notes/v<версия>.md`;
-3. создайте и отправьте тег:
-   ```sh
-   git tag v1.2.0
-   git push origin v1.2.0
-   ```
+3. отправьте изменения в `main`.
+
+Сборка запустится сама, когда меняется папка `docs/release-notes`. Её можно запустить и вручную: Actions → Release → Run workflow. Тег `v<версия>` создаётся автоматически.
 
 Сборка под Windows и Linux займёт минут десять, после чего на странице релизов появятся файлы и `SHA256SUMS.txt`.
