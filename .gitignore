@@ -1,0 +1,6 @@
+node_modules/
+dist/
+core/*
+!core/README.md
+*.log
+.DS_Store

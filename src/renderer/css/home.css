@@ -1,0 +1,467 @@
+/* ===== Главная: схема маршрута ===== */
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 318px;
+  gap: 24px;
+  min-height: 100%;
+}
+.home-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.home-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.home-head h1 {
+  font-size: 30px;
+}
+.home-head .where {
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.route {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: clamp(286px, 40vh, 340px);
+  margin: 10px auto 0;
+}
+.route > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.route .track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--text-3) 38%, transparent);
+  stroke-width: calc(var(--line-w) * 0.55);
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.route .live {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: var(--line-w);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--len) var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset calc(1.1s / var(--anim)) var(--ease), stroke var(--t-med);
+}
+.route .live.halo {
+  stroke-width: calc(var(--line-w) * 3.2);
+  opacity: calc(var(--glow) * 0.35);
+  filter: blur(6px);
+}
+[data-conn='connecting'] .route .live {
+  stroke: var(--busy);
+  stroke-dashoffset: calc(var(--len) * 0.5);
+}
+[data-conn='connected'] .route .live {
+  stroke-dashoffset: 0;
+}
+[data-conn='error'] .route .live {
+  stroke: var(--bad);
+  stroke-dashoffset: calc(var(--len) * 0.72);
+}
+.route .packets circle {
+  fill: #fff;
+  opacity: 0;
+}
+[data-conn='connected'] .route .packets circle {
+  opacity: 0.95;
+}
+
+/* Станции */
+.station {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: var(--line-w) solid color-mix(in srgb, var(--text-3) 55%, transparent);
+  color: var(--text-2);
+  transition: border-color var(--t-med), color var(--t-med);
+}
+[data-conn='connected'] .station {
+  border-color: var(--line);
+  color: var(--text);
+}
+.st-label {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.35;
+}
+.st-label b {
+  display: block;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Хаб — кнопка подключения на линии */
+.hub {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 168px;
+  height: 168px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.hub .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-3) 55%, transparent);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--line-w) * 2.1), #000 calc(100% - var(--line-w) * 2.1 + 1px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--line-w) * 2.1), #000 calc(100% - var(--line-w) * 2.1 + 1px));
+  transition: background var(--t-med);
+}
+.hub .disc {
+  position: absolute;
+  inset: calc(var(--line-w) * 2.1 + 7px);
+  border-radius: 50%;
+  background: radial-gradient(120% 120% at 30% 20%, color-mix(in srgb, var(--panel-2) 100%, #fff 6%), var(--panel));
+  box-shadow: 0 1px 0 color-mix(in srgb, #fff 8%, transparent) inset, 0 18px 40px color-mix(in srgb, #000 35%, transparent);
+  transition: background var(--t-med), transform var(--t-fast) var(--ease);
+}
+.hub .ic {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  color: var(--text-2);
+  transition: color var(--t-med);
+}
+.hub:hover .disc {
+  transform: scale(1.025);
+}
+.hub:active .disc {
+  transform: scale(0.97);
+}
+.hub::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  opacity: 0;
+}
+[data-conn='connecting'] .hub .ring,
+[data-conn='disconnecting'] .hub .ring {
+  background: conic-gradient(from 0deg, var(--busy), transparent 65%, var(--busy));
+  animation: spin calc(1.1s / var(--anim)) linear infinite;
+}
+[data-conn='connecting'] .hub .ic {
+  color: var(--busy);
+}
+[data-conn='connected'] .hub .ring {
+  background: var(--line);
+  box-shadow: 0 0 40px var(--line-glow);
+}
+[data-conn='connected'] .hub .disc {
+  background: radial-gradient(120% 120% at 30% 20%, color-mix(in srgb, var(--line) 82%, #fff), var(--line));
+}
+[data-conn='connected'] .hub .ic {
+  color: var(--on-line);
+}
+[data-conn='connected'] .hub::after {
+  animation: sonar calc(2.6s / var(--anim)) ease-out infinite;
+}
+@keyframes sonar {
+  0% {
+    opacity: calc(var(--glow) * 0.9);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+[data-conn='error'] .hub .ring {
+  background: var(--bad);
+}
+[data-conn='error'] .hub .ic {
+  color: var(--bad);
+}
+
+/* Подпись сервера под хабом */
+.hub-caption {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 300px;
+}
+.server-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 100%;
+  height: 34px;
+  padding: 0 10px 0 9px;
+  border-radius: 99px;
+  border: 1px solid var(--hair);
+  background: var(--panel-bg);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13.5px;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.server-switch:hover {
+  border-color: var(--line);
+}
+.server-switch .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.server-switch .ic {
+  color: var(--text-3);
+  flex: none;
+}
+.hub-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Статус под схемой */
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  text-align: center;
+}
+.status-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--text);
+}
+[data-conn='connected'] .status-title {
+  color: var(--ok);
+}
+[data-conn='connecting'] .status-title,
+[data-conn='disconnecting'] .status-title {
+  color: var(--busy);
+}
+[data-conn='error'] .status-title {
+  color: var(--bad);
+}
+.status-sub {
+  color: var(--text-2);
+  font-size: 13.5px;
+  max-width: 560px;
+}
+.status-timer {
+  font-size: 15px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.status .err-actions {
+  margin-top: 8px;
+}
+
+/* Быстрые станции */
+.quick {
+  margin-top: auto;
+  padding-top: 20px;
+}
+.quick-title {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-bottom: 9px;
+}
+.quick-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quick-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 38px;
+  max-width: 260px;
+  padding: 0 12px 0 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--hair);
+  background: var(--panel-bg);
+  color: var(--text);
+  font-size: 13px;
+  transition: border-color var(--t-fast);
+}
+.quick-item:hover {
+  border-color: color-mix(in srgb, var(--line) 70%, transparent);
+}
+.quick-item.on {
+  border-color: var(--line);
+  box-shadow: 0 0 0 3px var(--line-soft);
+}
+.quick-item .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.quick-item .ping {
+  min-width: 0;
+  flex: none;
+  font-size: 12px;
+}
+
+/* ===== Правая колонка ===== */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.speed-nums {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.speed-num .lbl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.speed-num .lbl i {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--down);
+}
+.speed-num.up .lbl i {
+  background: var(--up);
+}
+.speed-num .val {
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.speed-num .val small {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-left: 3px;
+}
+.chart {
+  position: relative;
+  height: 118px;
+  margin-top: 12px;
+}
+.chart canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.totals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.totals b {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.kv {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 9px;
+  column-gap: 12px;
+  font-size: 13px;
+}
+.kv dt {
+  color: var(--text-2);
+}
+.kv dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.side .seg {
+  width: 100%;
+}
+.side .seg button {
+  flex: 1;
+  padding: 0 6px;
+}
+.mode-hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.45;
+}
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in srgb, var(--busy) 40%, transparent);
+  background: color-mix(in srgb, var(--busy) 9%, var(--panel-bg));
+  font-size: 13px;
+}
+.banner .ic {
+  color: var(--busy);
+  flex: none;
+  margin-top: 1px;
+}
+.banner .grow {
+  flex: 1;
+}
+.banner b {
+  display: block;
+  margin-bottom: 2px;
+}
+.banner.info {
+  border-color: color-mix(in srgb, var(--line) 40%, transparent);
+  background: color-mix(in srgb, var(--line) 8%, var(--panel-bg));
+}
+.banner.info .ic {
+  color: var(--line);
+}
+
+@media (max-width: 1100px) {
+  .home {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+}

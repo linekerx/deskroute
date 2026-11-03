@@ -1,0 +1,50 @@
+/* Шрифты (SIL Open Font License, файлы лицензий рядом в папке fonts) */
+@font-face {
+  font-family: 'DR Onest';
+  src: url('../fonts/Onest-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: block;
+}
+@font-face {
+  font-family: 'DR Jost';
+  src: url('../fonts/Jost-Medium.woff') format('woff');
+  font-weight: 400 500;
+  font-display: block;
+}
+@font-face {
+  font-family: 'DR Jost';
+  src: url('../fonts/Jost-Bold.woff') format('woff');
+  font-weight: 600 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'DR Jost';
+  src: url('../fonts/Jost-Heavy.woff') format('woff');
+  font-weight: 800 900;
+  font-display: block;
+}
+@font-face {
+  font-family: 'DR Inter';
+  src: url('../fonts/Inter-Regular.woff') format('woff');
+  font-weight: 400 500;
+}
+@font-face {
+  font-family: 'DR Inter';
+  src: url('../fonts/Inter-SemiBold.woff') format('woff');
+  font-weight: 600;
+}
+@font-face {
+  font-family: 'DR Inter';
+  src: url('../fonts/Inter-Bold.woff') format('woff');
+  font-weight: 700 900;
+}
+@font-face {
+  font-family: 'DR Mono';
+  src: url('../fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400 500;
+}
+@font-face {
+  font-family: 'DR Mono';
+  src: url('../fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 600 900;
+}

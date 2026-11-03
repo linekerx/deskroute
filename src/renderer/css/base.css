@@ -1,0 +1,186 @@
+/* ===== Токены темы (значения по умолчанию = тема «Ночная схема»; перезаписываются из js/themes.js) ===== */
+:root {
+  --bg: #0f1730;
+  --bg-2: #0a1024;
+  --panel: #17213d;
+  --panel-2: #1f2b4d;
+  --border: #2b3862;
+  --rail: #0c1329;
+  --titlebar: #0c1329;
+  --input: #111a34;
+  --text: #eef1fa;
+  --text-2: #a6b0ce;
+  --text-3: #6d79a0;
+  --line: #ff7a1a;
+  --line-2: #ffc23d;
+  --on-line: #1c0e02;
+  --ok: #3fd6a6;
+  --busy: #ffc23d;
+  --bad: #ff5468;
+  --down: #3fd6a6;
+  --up: #ff9a4a;
+  --sub-1: #ff7a1a;
+  --sub-2: #3fb5ff;
+  --sub-3: #b48cff;
+  --sub-4: #3fd6a6;
+  --sub-5: #ff6fa8;
+  --sub-6: #ffd23f;
+
+  --radius: 14px;
+  --line-w: 6px;
+  --panel-alpha: 0.9;
+  --blur: 0px;
+  --glow: 0.55;
+  --anim: 1;
+  --font-ui: 'DR Onest', 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'DR Jost', 'DR Onest', 'Segoe UI', sans-serif;
+  --font-mono: 'DR Mono', 'Cascadia Mono', Consolas, ui-monospace, monospace;
+
+  /* производные */
+  --r-sm: calc(var(--radius) * 0.55);
+  --r-md: var(--radius);
+  --r-lg: calc(var(--radius) * 1.35);
+  --panel-bg: color-mix(in srgb, var(--panel) calc(var(--panel-alpha) * 100%), transparent);
+  --panel-bg-2: color-mix(in srgb, var(--panel-2) calc(var(--panel-alpha) * 100%), transparent);
+  --hair: color-mix(in srgb, var(--border) 70%, transparent);
+  --line-soft: color-mix(in srgb, var(--line) 16%, transparent);
+  --line-glow: color-mix(in srgb, var(--line) calc(var(--glow) * 70%), transparent);
+  --ok-soft: color-mix(in srgb, var(--ok) 15%, transparent);
+  --bad-soft: color-mix(in srgb, var(--bad) 15%, transparent);
+  --busy-soft: color-mix(in srgb, var(--busy) 15%, transparent);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: calc(0.14s / var(--anim));
+  --t-med: calc(0.28s / var(--anim));
+
+  color-scheme: dark;
+}
+:root[data-scheme='light'] {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+}
+input,
+textarea,
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+a {
+  color: var(--line);
+  text-decoration: none;
+}
+::selection {
+  background: color-mix(in srgb, var(--line) 40%, transparent);
+}
+.selectable,
+input,
+textarea {
+  user-select: text;
+}
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.15;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 21px;
+}
+h3 {
+  font-size: 16px;
+}
+p {
+  margin: 0;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+.mono {
+  font-family: var(--font-mono);
+}
+.dim {
+  color: var(--text-2);
+}
+.faint {
+  color: var(--text-3);
+}
+.hidden {
+  display: none !important;
+}
+
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--line);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Полосы прокрутки */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-3) 35%, transparent);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--text-3) 60%, transparent);
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Отключение анимаций */
+:root[data-anim='off'] *,
+:root[data-anim='off'] *::before,
+:root[data-anim='off'] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+}

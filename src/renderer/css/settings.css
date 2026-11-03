@@ -1,0 +1,443 @@
+/* ===== Правила маршрутизации ===== */
+.presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.preset {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--hair);
+  background: var(--panel-bg);
+  text-align: left;
+  color: var(--text);
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.preset:hover {
+  border-color: color-mix(in srgb, var(--line) 50%, transparent);
+}
+.preset.on {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--line) 7%, var(--panel-bg));
+}
+.preset svg.diagram {
+  width: 100%;
+  height: 92px;
+  margin-bottom: 4px;
+}
+.preset h3 {
+  font-size: 16px;
+}
+.preset p {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.45;
+}
+.preset .need {
+  font-size: 12px;
+  color: var(--busy);
+}
+.rules-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: 18px 2px 4px;
+}
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 520px;
+}
+.opt .t {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.opt .d {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.rule-lists {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+.rule-list h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.rule-list h3 .ic {
+  color: var(--chip);
+}
+.rule-list .hint {
+  margin-bottom: 10px;
+  min-height: 34px;
+}
+.rule-help {
+  margin-top: 18px;
+  font-size: 12.5px;
+  color: var(--text-3);
+  line-height: 1.6;
+}
+.rule-help code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 19px;
+  margin: 28px 0 12px;
+}
+
+/* ===== Журнал ===== */
+.console {
+  height: calc(100vh - 210px);
+  min-height: 300px;
+  overflow: auto;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  user-select: text;
+}
+.log-line {
+  display: flex;
+  gap: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.log-line .t {
+  color: var(--text-3);
+  flex: none;
+}
+.log-line.app .x {
+  color: var(--line);
+}
+.log-line.error .x {
+  color: var(--bad);
+}
+.log-line.warning .x {
+  color: var(--busy);
+}
+.log-line.debug .x,
+.log-line.info .x {
+  color: var(--text-2);
+}
+
+/* ===== Настройки ===== */
+.settings {
+  display: grid;
+  grid-template-columns: 196px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.subnav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.subnav button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+}
+.subnav button:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  color: var(--text);
+}
+.subnav button.on {
+  background: color-mix(in srgb, var(--line) 14%, transparent);
+  color: var(--text);
+}
+.subnav button.on .ic {
+  color: var(--line);
+}
+.set-section {
+  display: none;
+  max-width: 920px;
+}
+.set-section.on {
+  display: block;
+}
+.set-group {
+  margin-bottom: 18px;
+}
+.set-group > h2 {
+  font-size: 19px;
+  margin: 4px 0 12px;
+}
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--hair);
+}
+.set-row:last-child {
+  border-bottom: 0;
+}
+.set-row .txt {
+  flex: 1;
+  min-width: 0;
+}
+.set-row .t {
+  font-weight: 500;
+}
+.set-row .d {
+  font-size: 12.5px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+.set-row .ctl {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.set-row .ctl .input {
+  width: 110px;
+}
+.set-row .ctl .input.wide {
+  width: 320px;
+}
+.mode-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.mode-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hair);
+  background: var(--panel-bg);
+  text-align: left;
+  color: var(--text);
+}
+.mode-card.on {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--line) 8%, var(--panel-bg));
+}
+.mode-card .ic {
+  color: var(--line);
+  margin-bottom: 4px;
+}
+.mode-card b {
+  font-size: 14px;
+}
+.mode-card span {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.beta {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--busy);
+  background: var(--busy-soft);
+  vertical-align: 2px;
+}
+
+/* ===== Студия оформления ===== */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+  gap: 12px;
+}
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hair);
+  background: var(--panel-bg);
+  color: var(--text);
+  text-align: left;
+  transition: border-color var(--t-fast);
+}
+.theme-card:hover {
+  border-color: color-mix(in srgb, var(--line) 50%, transparent);
+}
+.theme-card.on {
+  border-color: var(--line);
+  box-shadow: 0 0 0 3px var(--line-soft);
+}
+.theme-card .pv {
+  height: 86px;
+  border-radius: calc(var(--r-sm) + 2px);
+  overflow: hidden;
+  position: relative;
+}
+.theme-card .pv > svg:not(.ic) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.theme-card .nm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.theme-card .nm .spacer {
+  flex: 1;
+}
+.theme-card .del {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-3);
+  display: grid;
+  place-items: center;
+}
+.theme-card .del:hover {
+  color: var(--bad);
+  background: var(--bad-soft);
+}
+.theme-card.action .pv {
+  display: grid;
+  place-items: center;
+  color: var(--text-2);
+  border: 1px dashed var(--hair);
+  background: transparent;
+}
+.studio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+.color-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.color-group h3 {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  text-align: left;
+  color: var(--text);
+}
+.color-row:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+.color-row .sw {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 22%, transparent) inset, 0 0 0 3px var(--panel);
+}
+.color-row .lb {
+  flex: 1;
+  font-size: 13px;
+}
+.color-row .hx {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+.color-row.changed .lb::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  vertical-align: 2px;
+}
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 28px;
+}
+.bg-options {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+.bg-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 6px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hair);
+  background: var(--panel-bg);
+  color: var(--text-2);
+  font-size: 12.5px;
+}
+.bg-opt .ic {
+  color: var(--text-2);
+}
+.bg-opt.on {
+  border-color: var(--line);
+  color: var(--text);
+}
+.bg-opt.on .ic {
+  color: var(--line);
+}
+.about {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  padding: 22px;
+}
+.about .logo {
+  width: 84px;
+  height: 84px;
+}
+.about h2 {
+  font-size: 26px;
+}
+.license-list {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.7;
+}

@@ -1,0 +1,87 @@
+{
+  "name": "deskroute",
+  "productName": "DeskRoute",
+  "version": "1.1.0",
+  "description": "DeskRoute — десктопный клиент для подписок Xray (VLESS, VMess, Trojan, Shadowsocks, Hysteria2) с настраиваемым оформлением",
+  "main": "src/main/main.js",
+  "author": "DeskRoute",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "fetch-core": "node scripts/fetch-core.js",
+    "test": "node --test test/links.test.js",
+    "test:e2e": "node test/e2e.js",
+    "dist:win": "node scripts/fetch-core.js --platform=win32 --arch=x64 && electron-builder --win --x64",
+    "dist:mac": "node scripts/fetch-core.js --platform=darwin && electron-builder --mac",
+    "dist:linux": "node scripts/fetch-core.js --platform=linux --arch=x64 && electron-builder --linux --x64"
+  },
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "app.deskroute.client",
+    "productName": "DeskRoute",
+    "copyright": "DeskRoute",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "core",
+        "to": "core",
+        "filter": [
+          "**/*",
+          "!README.md"
+        ]
+      }
+    ],
+    "protocols": [
+      {
+        "name": "DeskRoute",
+        "schemes": [
+          "deskroute"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "DeskRoute",
+      "artifactName": "DeskRoute-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "DeskRoute-Portable-${version}.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.utilities",
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Network",
+      "icon": "assets/icon.png"
+    }
+  }
+}

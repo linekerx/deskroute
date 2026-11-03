@@ -1,0 +1,299 @@
+/* ===== Серверы: подписки как линии метро ===== */
+.servers-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.servers-tools .search {
+  flex: 1;
+  min-width: 220px;
+  max-width: 380px;
+}
+.servers-tools .spacer {
+  flex: 1;
+}
+.line-group {
+  margin-bottom: 18px;
+  padding: 6px 6px 8px;
+  --sub: var(--sub-1);
+}
+.line-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 12px 12px 10px;
+}
+.line-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 9px;
+  background: var(--sub);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+.line-title {
+  min-width: 0;
+  flex: 1;
+}
+.line-title h3 {
+  font-size: 17px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.line-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+.line-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.line-meta .err {
+  color: var(--bad);
+}
+.usage {
+  width: 210px;
+  flex: none;
+}
+.usage .bar {
+  height: 6px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--text-3) 25%, transparent);
+  overflow: hidden;
+}
+.usage .bar i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--sub);
+}
+.usage .bar i.warn {
+  background: var(--bad);
+}
+.usage .txt {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.line-actions {
+  display: flex;
+  gap: 2px;
+}
+.announce {
+  display: flex;
+  gap: 10px;
+  margin: 0 12px 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--sub) 10%, transparent);
+  font-size: 13px;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+.announce .ic {
+  color: var(--sub);
+  flex: none;
+  margin-top: 1px;
+}
+.stations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.line-group.collapsed .stations,
+.line-group.collapsed .announce {
+  display: none;
+}
+.srv {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 6px 10px 6px 52px;
+  border-radius: var(--r-sm);
+  transition: background var(--t-fast);
+}
+.srv::before {
+  content: '';
+  position: absolute;
+  left: calc(27px - var(--line-w) / 2);
+  top: 0;
+  bottom: 0;
+  width: var(--line-w);
+  background: var(--sub);
+}
+.srv:first-child::before {
+  top: 50%;
+}
+.srv:last-child::before {
+  bottom: 50%;
+}
+.srv:only-child::before {
+  display: none;
+}
+.srv .stop {
+  position: absolute;
+  left: 27px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--bg);
+  border: calc(var(--line-w) * 0.7) solid var(--sub);
+  transition: width var(--t-fast), height var(--t-fast);
+}
+.srv:hover {
+  background: color-mix(in srgb, var(--text) 4.5%, transparent);
+}
+.srv.selected {
+  background: color-mix(in srgb, var(--sub) 11%, transparent);
+}
+.srv.selected .stop {
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border-width: calc(var(--line-w) * 0.9);
+  border-color: var(--bg);
+  box-shadow: 0 0 0 calc(var(--line-w) * 0.6) var(--sub);
+}
+.srv.live .stop::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--sub);
+  animation: sonar calc(2.2s / var(--anim)) ease-out infinite;
+}
+.srv-main {
+  flex: 1;
+  min-width: 0;
+}
+.srv-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.srv-name .txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.srv-name .live-tag {
+  flex: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ok);
+}
+.srv .badges {
+  margin-top: 4px;
+}
+.srv .addr {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-left: 2px;
+}
+.srv .acts {
+  display: flex;
+  gap: 2px;
+  opacity: 0.55;
+  transition: opacity var(--t-fast);
+}
+.srv:hover .acts,
+.srv .acts .fav.on {
+  opacity: 1;
+}
+.srv .fav.on .ic {
+  color: var(--busy);
+  fill: var(--busy);
+}
+.srv .warn-ic {
+  color: var(--busy);
+  flex: none;
+}
+.srv.has-issue .srv-name .txt {
+  color: var(--text-2);
+}
+.servers-empty {
+  margin-top: 30px;
+}
+.count-chip {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-left: 2px;
+}
+
+/* Быстрый выбор сервера (Ctrl+K) */
+.picker-modal {
+  width: min(560px, calc(100vw - 48px));
+}
+.picker-modal .search .input {
+  height: 44px;
+  font-size: 15px;
+}
+.picker-list {
+  max-height: 420px;
+  overflow: auto;
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+.pick {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  text-align: left;
+  font-size: 13.5px;
+}
+.pick .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pick .grp {
+  font-size: 12px;
+  color: var(--text-3);
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pick.active {
+  background: color-mix(in srgb, var(--line) 16%, transparent);
+}
+.pick .sub-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  border: 3px solid var(--sub, var(--line));
+}
