@@ -5,12 +5,13 @@
 <h1 align="center">DeskRoute</h1>
 
 <p align="center">
-  VPN-клиент для Windows и Linux на ядре Xray: подписки, как в Happ, интерфейс в виде схемы метро и оформление, которое меняется целиком.
+  VPN-клиент для Windows, Linux и Android на ядре Xray: подписки, как в Happ, интерфейс в виде схемы метро и оформление, которое меняется целиком.
 </p>
 
 <p align="center">
   <a href="../../releases/latest"><b>Скачать последнюю версию</b></a> ·
   <a href="docs/INSTALL.md">Установка</a> ·
+  <a href="docs/ANDROID.md">Android</a> ·
   <a href="docs/BUILD.md">Сборка из исходников</a> ·
   <a href="docs/FAQ.md">Вопросы и проблемы</a>
 </p>
@@ -59,6 +60,14 @@ cd DeskRoute-*/
 ```
 DeskRoute появится в меню приложений; из терминала он запускается командой `deskroute`. Есть и AppImage — один файл, для него в Arch нужен пакет `fuse2`.
 
+**Android 7+**: скачайте `DeskRoute-<версия>-android-arm64.apk` (подходит почти всем телефонам) или `…-android-universal.apk`, установите и откройте. Подробнее — в [docs/ANDROID.md](docs/ANDROID.md).
+
+<p>
+  <img src="docs/screenshots/android-home.png" width="220" alt="Android: главный экран">
+  <img src="docs/screenshots/android-servers.png" width="220" alt="Android: серверы">
+  <img src="docs/screenshots/android-light.png" width="220" alt="Android: светлая тема">
+</p>
+
 Потом нажмите «Добавить», вставьте ссылку на подписку и подключайтесь. Подробно — в [docs/INSTALL.md](docs/INSTALL.md).
 
 ## Сборка из исходников
@@ -76,7 +85,8 @@ npm run dist:linux # tar.gz и AppImage для Linux
 ```
 src/main/        главный процесс Electron: подключение, подписки, ядро, системный прокси, kill switch, zapret
 src/preload/     мост между окном и главным процессом
-src/renderer/    интерфейс на HTML, CSS и JS без фреймворков и сборщиков
+src/renderer/    интерфейс на HTML, CSS и JS без фреймворков и сборщиков (общий для всех платформ)
+android/         приложение для Android: VPN-сервис на libv2ray и мост к интерфейсу
 test/            тесты разбора ссылок и сквозной тест через настоящее ядро Xray
 ```
 
@@ -84,6 +94,6 @@ test/            тесты разбора ссылок и сквозной те
 
 ## Лицензии
 
-Код DeskRoute распространяется по лицензии [MIT](LICENSE). Ядро [Xray-core](https://github.com/XTLS/Xray-core) — MPL-2.0. Иконки [Lucide](https://lucide.dev) — ISC. Шрифты Onest, Jost, Inter и JetBrains Mono — SIL OFL 1.1. Гео-базы: [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat), [runetfreedom/russia-v2ray-rules-dat](https://github.com/runetfreedom/russia-v2ray-rules-dat).
+Код DeskRoute распространяется по лицензии [MIT](LICENSE). Ядро [Xray-core](https://github.com/XTLS/Xray-core) — MPL-2.0, для Android — [AndroidLibXrayLite](https://github.com/2dust/AndroidLibXrayLite). Иконки [Lucide](https://lucide.dev) — ISC. Шрифты Onest, Jost, Inter и JetBrains Mono — SIL OFL 1.1. Гео-базы: [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat), [runetfreedom/russia-v2ray-rules-dat](https://github.com/runetfreedom/russia-v2ray-rules-dat).
 
 DeskRoute — клиент: он не предоставляет серверы и подписки, их выдаёт ваш провайдер.
