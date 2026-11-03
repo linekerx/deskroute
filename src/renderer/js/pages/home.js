@@ -47,10 +47,11 @@
     const live = svgEl('path', { class: 'live', id: 'route-live' });
     const packets = svgEl('g', { class: 'packets' });
     svg.append(track, halo, live, packets);
-    const pc = h('div', { class: 'station' }, icon('laptop', 24));
+    const phone = S().platform === 'android';
+    const pc = h('div', { class: 'station' }, icon(phone ? 'smartphone' : 'laptop', 24));
     const net = h('div', { class: 'station' }, icon('globe', 24));
-    const pcLabel = h('div', { class: 'st-label' }, h('b', null, 'Этот компьютер'), h('span', { class: 'pc-sub' }, 'Локально'));
-    const netLabel = h('div', { class: 'st-label' }, h('b', null, 'Интернет'), h('span', null, 'Сайты и сервисы'));
+    const pcLabel = h('div', { class: 'st-label' }, h('b', null, phone ? 'Телефон' : 'Этот компьютер'), h('span', { class: 'pc-sub' }, phone ? 'Приложения' : 'Локально'));
+    const netLabel = h('div', { class: 'st-label' }, h('b', null, 'Интернет'), h('span', null, phone ? 'Сайты' : 'Сайты и сервисы'));
     const hub = h('button', { class: 'hub', 'aria-label': 'Подключить или отключить', onclick: onHub }, h('span', { class: 'ring' }), h('span', { class: 'disc' }), icon('power', 46));
     const serverBtn = h('button', { class: 'server-switch', onclick: () => DR.app.quickPicker() });
     const meta = h('div', { class: 'hub-meta' });
@@ -68,10 +69,12 @@
     if (!W || !H) return;
     const hubR = refs.hub.offsetWidth / 2;
     const yHub = hubR + 6;
-    const yLow = Math.min(H - 70, yHub + Math.max(80, H * 0.36));
-    const xPc = Math.max(46, W * 0.09);
+    const xPc = Math.max(W < 500 ? 34 : 46, W * 0.09);
     const xNet = W - xPc;
     const xHub = W / 2;
+    // на узком экране подъём линии ограничен, чтобы она не заходила за станции
+    const maxRise = xHub - hubR * 0.6 - xPc - 30;
+    const yLow = Math.min(H - 70, yHub + Math.min(maxRise, Math.max(80, H * 0.36)));
     const rise = yLow - yHub;
     const pts = [
       [xPc, yLow],
@@ -282,7 +285,7 @@
     } else if (st === 'connecting') sub = srv ? DR.flags.cleanName(srv.name) : '';
     else if (st === 'connected') {
       const p = s.conn.ports || {};
-      sub = s.conn.mode === 'system' ? `Системный прокси включён: 127.0.0.1:${p.http}` : s.conn.mode === 'tun' ? 'Весь трафик идёт через TUN-адаптер' : `HTTP-прокси 127.0.0.1:${p.http}, SOCKS5 127.0.0.1:${p.socks}`;
+      sub = s.platform === 'android' ? 'Трафик телефона идёт через VPN' : s.conn.mode === 'system' ? `Системный прокси включён: 127.0.0.1:${p.http}` : s.conn.mode === 'tun' ? 'Весь трафик идёт через TUN-адаптер' : `HTTP-прокси 127.0.0.1:${p.http}, SOCKS5 127.0.0.1:${p.socks}`;
       const extras = [];
       if (s.conn.killSwitch) extras.push(`kill switch ${s.conn.killSwitch === 'strict' ? 'строгий' : 'мягкий'}`);
       if (s.conn.zapret) extras.push('Discord и YouTube через zapret');
@@ -314,7 +317,7 @@
     clear(refs.meta);
     if (!srv) {
       b.append(icon('server', 16), h('span', { class: 'name' }, 'Сервер не выбран'), icon('chevron-down', 16));
-      refs.netLabel.querySelector('span').textContent = 'Сайты и сервисы';
+      refs.netLabel.querySelector('span').textContent = S().platform === 'android' ? 'Сайты' : 'Сайты и сервисы';
       return;
     }
     b.append(DR.flags.flagEl(srv.name), h('span', { class: 'name' }, DR.flags.cleanName(srv.name)), icon('chevron-down', 16));
@@ -355,7 +358,9 @@
     if (!s) return;
     refs.modeSeg.set(s.mode);
     refs.presetSeg.set(s.routing.preset);
-    refs.modeHint.textContent = `${MODE_TEXT[s.mode] || ''} ${PRESET_TEXT[s.routing.preset] || ''}`;
+    const android = S().platform === 'android';
+    refs.modeSeg.classList.toggle('hidden', android);
+    refs.modeHint.textContent = `${android ? 'Через VPN Android идёт трафик всех приложений.' : MODE_TEXT[s.mode] || ''} ${PRESET_TEXT[s.routing.preset] || ''}`;
     renderStatus();
   }
 

@@ -282,7 +282,7 @@
       title: DR.flags.cleanName(s.name),
       width: 420,
       body: h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } }, qrBox, h('p', { class: 'hint' }, 'Отсканируйте камерой в Happ, v2rayNG или другом клиенте.'), h('div', { class: 'copy-line selectable' }, link)),
-      actions: [h('div', { class: 'spacer' }), h('button', { class: 'btn primary', onclick: () => DR.util.copyText(link).then(() => {
+      actions: [S().platform === 'android' ? h('button', { class: 'btn', onclick: () => DR.api.invoke('share', link) }, icon('share-2', 16), 'Поделиться') : null, h('div', { class: 'spacer' }), h('button', { class: 'btn primary', onclick: () => DR.util.copyText(link).then(() => {
         DR.ui.toast('ok', 'Ссылка скопирована');
         m.close();
       }) }, icon('copy', 16), 'Копировать ссылку')],
@@ -367,6 +367,24 @@
   }
 
   /* ---------- клавиатура и вставка ---------- */
+  /** Кнопка «Назад» в Android: закрыть окно или меню, затем вернуться на главную. */
+  window.__drBack = () => {
+    if (document.querySelector('.popover')) {
+      DR.ui.closePopover();
+      return true;
+    }
+    const bd = document.querySelectorAll('.backdrop');
+    if (bd.length) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return true;
+    }
+    if (currentPage !== 'home') {
+      go('home');
+      return true;
+    }
+    return false;
+  };
+
   function bindKeys() {
     document.addEventListener('keydown', (e) => {
       const inField = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);

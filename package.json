@@ -1,8 +1,8 @@
 {
   "name": "deskroute",
   "productName": "DeskRoute",
-  "version": "1.1.0",
-  "description": "DeskRoute — десктопный клиент для подписок Xray (VLESS, VMess, Trojan, Shadowsocks, Hysteria2) с настраиваемым оформлением",
+  "version": "1.2.0",
+  "description": "DeskRoute — VPN-клиент для Windows, Linux и Android на ядре Xray (VLESS, VMess, Trojan, Shadowsocks, Hysteria2) с настраиваемым оформлением",
   "main": "src/main/main.js",
   "author": "linekerx",
   "license": "MIT",
@@ -14,7 +14,8 @@
     "test:e2e": "node test/e2e.js",
     "dist:win": "node scripts/fetch-core.js --platform=win32 --arch=x64 && electron-builder --win --x64 --publish never",
     "dist:mac": "node scripts/fetch-core.js --platform=darwin && electron-builder --mac --publish never",
-    "dist:linux": "node scripts/fetch-core.js --platform=linux --arch=x64 && electron-builder --linux --x64 --publish never"
+    "dist:linux": "node scripts/fetch-core.js --platform=linux --arch=x64 && electron-builder --linux --x64 --publish never",
+    "build:android-web": "node scripts/build-android-web.js"
   },
   "devDependencies": {
     "electron": "^45.2.1",

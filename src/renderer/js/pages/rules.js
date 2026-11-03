@@ -105,13 +105,13 @@
         diagram(p.id),
         h('h3', null, p.title),
         h('p', null, p.text),
-        need ? h('span', { class: 'need' }, 'Гео-базы для России не установлены') : null,
+        need ? h('span', { class: 'need' }, S().platform === 'android' ? 'В Android пока недоступно: во встроенных гео-базах нет списка заблокированного' : 'Гео-базы для России не установлены') : null,
       );
       refs.presets.append(card);
     }
     const g2 = S().core.geo || {};
     clear(refs.geoNote);
-    if (!g2.ruBlocked) {
+    if (!g2.ruBlocked && S().platform !== 'android') {
       const p = S().progress.geo;
       refs.geoNote.append(
         h('div', { class: 'banner info', style: { marginTop: '14px' } },

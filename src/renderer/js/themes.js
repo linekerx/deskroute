@@ -223,6 +223,13 @@
     root.dataset.anim = p.animations ? 'on' : 'off';
     root.dataset.scheme = r.scheme;
     DR.api.setZoom(p.scale);
+    if (window.DRNative && window.DRNative.setBars) {
+      try {
+        window.DRNative.setBars(r.colors.titlebar, r.scheme === 'light');
+      } catch {
+        /* старые версии */
+      }
+    }
     if (DR.background) DR.background.render(p, r.colors);
     document.dispatchEvent(new CustomEvent('dr:theme', { detail: r }));
     return r;

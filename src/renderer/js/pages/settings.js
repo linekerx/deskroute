@@ -218,7 +218,7 @@
     const bgBox = refs.bg;
     clear(bgBox);
     const opts = h('div', { class: 'bg-options' });
-    for (const b of T().BG_EFFECTS) {
+    for (const b of T().BG_EFFECTS.filter((x) => !(x.id === 'image' && S().platform === 'android'))) {
       opts.append(h('button', { class: `bg-opt ${p.bgEffect === b.id ? 'on' : ''}`, onclick: async () => {
         if (b.id === 'image' && !p.bgImage) {
           const url = await DR.api.invoke('pickBackground').catch((e) => DR.ui.toast('error', e.message));
@@ -297,12 +297,32 @@
     refs.conn = h('div');
     return refs.conn;
   }
+  function renderConnAndroid(box, s) {
+    const dns = h('input', { class: 'input wide', value: s.dns, spellcheck: 'false' });
+    dns.addEventListener('change', () => save({ dns: dns.value.trim() || 'https://1.1.1.1/dns-query' }));
+    const lvl = h('select', { class: 'select', style: { width: '170px' } }, ...[['warning', 'Предупреждения'], ['info', 'Подробно'], ['debug', 'Отладка'], ['error', 'Только ошибки'], ['none', 'Выключен']].map(([v, l]) => h('option', { value: v, selected: s.logLevel === v }, l)));
+    lvl.addEventListener('change', () => save({ logLevel: lvl.value }));
+    box.append(
+      h('div', { class: 'set-group' }, h('h2', null, 'Режим работы'),
+        h('div', { class: 'panel panel-pad' }, h('p', { class: 'dim' }, 'DeskRoute работает как VPN Android: через сервер идёт трафик всех приложений, кроме того, что правила отправляют напрямую.'))),
+      h('div', { class: 'set-group' }, h('h2', null, 'Kill switch'),
+        h('div', { class: 'panel' },
+          setRow('Постоянный VPN и блокировка без VPN', 'В Android это делает сама система: Настройки → VPN → DeskRoute → включите «Постоянная VPN» и «Блокировать соединения без VPN». Тогда при обрыве интернет не пойдёт мимо сервера.', h('button', { class: 'btn sm', onclick: () => DR.api.invoke('openVpnSettings') }, icon('settings', 15), 'Открыть')))),
+      h('div', { class: 'set-group' }, h('h2', null, 'Сеть'),
+        h('div', { class: 'panel' },
+          setRow('DNS-сервер', 'Запросы идут через сервер', dns),
+          setRow('Мультиплексирование (Mux)', 'Иногда ускоряет WebSocket и gRPC, с Vision не используется', DR.ui.toggle(s.mux, (v) => save({ mux: v }))),
+          setRow('Подробность журнала ядра', null, lvl))),
+    );
+  }
+
   async function renderConn() {
     const box = refs.conn;
     if (!box) return;
     clear(box);
     const s = S().settings;
     if (!s) return;
+    if (S().platform === 'android') return renderConnAndroid(box, s);
     const modes = [
       { id: 'system', icon: 'monitor', title: 'Системный прокси', text: 'Браузеры и большинство программ сразу идут через сервер.' },
       { id: 'proxy', icon: 'plug', title: 'Только порт', text: 'Ничего не меняем в системе — настройте прокси в нужной программе сами.' },
@@ -472,6 +492,16 @@
     const box = refs.core;
     if (!box) return;
     clear(box);
+    if (S().platform === 'android') {
+      const c = S().core;
+      const g = c.geo || {};
+      const yes = (b) => (b ? 'есть' : 'нет');
+      box.append(h('div', { class: 'set-group' }, h('h2', null, 'Ядро Xray-core'),
+        h('div', { class: 'panel' },
+          setRow('Версия', 'Ядро встроено в приложение и обновляется вместе с ним', h('b', { class: 'num' }, `Xray ${c.version}`)),
+          setRow('Гео-базы', `Российские сайты: ${yes(g.ru)}. Заблокированные в РФ: ${yes(g.ruBlocked)}. Реклама: ${yes(g.ads)}.`, h('span', { class: 'faint num' }, `${(g.siteCodes || []).length} категорий`)))));
+      return;
+    }
     const c = S().core;
     const pc = S().progress.core;
     const pg = S().progress.geo;
@@ -510,11 +540,13 @@
     const logo = DR.app.logoSvg(84);
     logo.classList.add('logo');
     return h('div', null,
-      h('div', { class: 'panel about' }, logo, h('div', null, h('h2', null, 'DeskRoute'), h('p', { class: 'dim num' }, `Версия ${S().version || '1.0.0'}`), h('p', { class: 'dim', style: { marginTop: '6px', maxWidth: '520px' } }, 'Десктопный клиент для подписок Xray: VLESS, VMess, Trojan, Shadowsocks, Hysteria2. Работает через ядро Xray-core.'))),
+      h('div', { class: 'panel about' }, logo, h('div', null, h('h2', null, 'DeskRoute'), h('p', { class: 'dim num' }, `Версия ${S().version || '1.0.0'}`), h('p', { class: 'dim', style: { marginTop: '6px', maxWidth: '520px' } }, 'Клиент для подписок Xray: VLESS, VMess, Trojan, Shadowsocks, Hysteria2. Работает через ядро Xray-core.'))),
       h('div', { class: 'set-group', style: { marginTop: '18px' } }, h('h2', null, 'Данные'),
         h('div', { class: 'panel' },
-          setRow('Папка с настройками', 'Подписки, серверы, тема и журнал конфигурации', h('button', { class: 'btn', onclick: () => DR.api.invoke('openFolder', 'data') }, icon('folder-open', 16), 'Открыть')),
-          setRow('Горячие клавиши', 'Ctrl+K — быстрый выбор сервера, Ctrl+V — добавить ссылку из буфера, Ctrl+1…5 — разделы', null))),
+          S().platform === 'android'
+            ? setRow('Сайт проекта', 'Новые версии, инструкции и исходный код', h('button', { class: 'btn', onclick: () => DR.api.invoke('openExternal', 'https://github.com/linekerx/deskroute') }, icon('external-link', 16), 'GitHub'))
+            : setRow('Папка с настройками', 'Подписки, серверы, тема и журнал конфигурации', h('button', { class: 'btn', onclick: () => DR.api.invoke('openFolder', 'data') }, icon('folder-open', 16), 'Открыть')),
+          S().platform === 'android' ? null : setRow('Горячие клавиши', 'Ctrl+K — быстрый выбор сервера, Ctrl+V — добавить ссылку из буфера, Ctrl+1…5 — разделы', null))),
       h('div', { class: 'set-group' }, h('h2', null, 'Компоненты'),
         h('div', { class: 'panel panel-pad license-list' },
           h('div', null, 'Xray-core — Project X, лицензия MPL-2.0'),
