@@ -1,7 +1,7 @@
 {
   "name": "deskroute",
   "productName": "DeskRoute",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "DeskRoute — VPN-клиент для Windows, Linux и Android на ядре Xray (VLESS, VMess, Trojan, Shadowsocks, Hysteria2) с настраиваемым оформлением",
   "main": "src/main/main.js",
   "author": "linekerx",

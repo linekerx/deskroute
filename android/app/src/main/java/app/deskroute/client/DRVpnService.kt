@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.VpnService
 import android.os.Build
 import android.os.ParcelFileDescriptor
@@ -167,7 +168,11 @@ class DRVpnService : VpnService(), CoreCallbackHandler {
     }
 
     private fun startForegroundCompat(text: String) {
-        startForeground(NOTIFICATION_ID, buildNotification(text))
+        if (Build.VERSION.SDK_INT >= 34) {
+            startForeground(NOTIFICATION_ID, buildNotification(text), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+        } else {
+            startForeground(NOTIFICATION_ID, buildNotification(text))
+        }
     }
 
     private fun updateNotification(text: String) {

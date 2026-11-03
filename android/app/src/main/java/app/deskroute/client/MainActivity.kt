@@ -16,6 +16,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -50,6 +52,17 @@ class MainActivity : Activity() {
             }
         }
         setContentView(web)
+        // Android 15 рисует приложение под системными панелями — отступаем от них
+        web.setOnApplyWindowInsetsListener { v, insets ->
+            if (Build.VERSION.SDK_INT >= 30) {
+                val b = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.ime() or WindowInsets.Type.displayCutout())
+                v.setPadding(b.left, b.top, b.right, b.bottom)
+            } else {
+                @Suppress("DEPRECATION")
+                v.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
+            }
+            insets
+        }
         Core.sink = { type, json -> web.evaluateJavascript("window.__drNative && window.__drNative(${JSONObject.quote(type)}, $json)", null) }
         Core.pool.execute { Core.ensureEnv(applicationContext) }
         handleIntent(intent)
@@ -204,15 +217,27 @@ class MainActivity : Activity() {
         fun setBars(color: String, light: Boolean) = runOnUiThread {
             try {
                 val c = Color.parseColor(color)
+                @Suppress("DEPRECATION")
                 window.statusBarColor = c
+                @Suppress("DEPRECATION")
                 window.navigationBarColor = c
-                var flags = window.decorView.systemUiVisibility
-                flags = if (light) flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                if (Build.VERSION.SDK_INT >= 26) {
-                    flags = if (light) flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else flags and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-                }
-                window.decorView.systemUiVisibility = flags
+                window.decorView.setBackgroundColor(c)
                 web.setBackgroundColor(c)
+                if (Build.VERSION.SDK_INT >= 30) {
+                    val mask = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS or WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                    window.insetsController?.setSystemBarsAppearance(if (light) mask else 0, mask)
+                } else {
+                    @Suppress("DEPRECATION")
+                    var flags = window.decorView.systemUiVisibility
+                    @Suppress("DEPRECATION")
+                    flags = if (light) flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        @Suppress("DEPRECATION")
+                        flags = if (light) flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else flags and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+                    }
+                    @Suppress("DEPRECATION")
+                    window.decorView.systemUiVisibility = flags
+                }
             } catch (_: Exception) {
             }
         }

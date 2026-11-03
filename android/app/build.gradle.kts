@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = "app.deskroute.client"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 35
         versionCode = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
         versionName = appVersion
     }
