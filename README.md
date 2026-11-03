@@ -54,7 +54,7 @@
 **Arch Linux и другие дистрибутивы (x86_64)**
 ```sh
 tar -xzf DeskRoute-<версия>-linux-x64.tar.gz
-cd deskroute-*/
+cd DeskRoute-*/
 ./install.sh
 ```
 DeskRoute появится в меню приложений; из терминала он запускается командой `deskroute`. Есть и AppImage — один файл, для него в Arch нужен пакет `fuse2`.

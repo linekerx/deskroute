@@ -16,7 +16,7 @@
 ```sh
 sudo pacman -S --needed gtk3 nss alsa-lib polkit libcap nftables   # обычно уже установлены
 tar -xzf DeskRoute-<версия>-linux-x64.tar.gz
-cd deskroute-*/
+cd DeskRoute-*/
 ./install.sh
 ```
 
